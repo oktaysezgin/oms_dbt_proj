@@ -64,7 +64,3 @@ models:
     #     +post_hook: |
     #       INSERT INTO audit.model_runs (model_name, run_type, run_timestamp)
     #       VALUES ('{{ this.name }}', 'end', CURRENT_TIMESTAMP)
-
-
-
-XX

@@ -1,0 +1,66 @@
+name: 'oms_dbt_proj'
+version: '1.0.0'
+config-version: 2
+
+profile: 'oms_dbt_proj'
+
+analysis-paths: ["analyses"]
+model-paths: ["models"]
+macro-paths: ["macros"]
+seed-paths: ["seeds"]
+snapshot-paths: ["snapshots"]
+test-paths: ["tests"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  oms_dbt_proj:
+
+    # 🔹 STAGING LAYER
+    customers_stg:
+      +schema: L2_PROCESSING
+      +materialized: view
+
+    orders_stg:
+      +schema: L2_PROCESSING
+      +materialized: view
+
+    order_items_stg:
+      +schema: L2_PROCESSING
+      +materialized: view
+
+    # 🔹 FACT TABLE
+    orders_fact:
+      +schema: L2_PROCESSING      
+      +materialized: table
+
+    # 🔹 TRAINING / SANDBOX
+    profit_us:
+      +schema: TRAINING
+      +materialized: table
+
+    profit_uk:
+      +schema: TRAINING
+      +materialized: table
+
+    profit_india:
+      +schema: TRAINING
+      +materialized: table
+
+    # 🔹 CONSUMPTION LAYER
+    hooks_demo:
+      +pre_hook: "{{ log_start_time(this) }}"
+      +post_hook: "{{ log_end_time(this) }}"
+
+    # # 🔹 INLINE HOOK EXAMPLE (opsiyonel)
+    # hooks_demo:
+    #   cust_orders_11:
+    #     +pre_hook: |
+    #       INSERT INTO audit.model_runs (model_name, run_type, run_timestamp)
+    #       VALUES ('{{ this.name }}', 'start', CURRENT_TIMESTAMP)
+
+    #     +post_hook: |
+    #       INSERT INTO audit.model_runs (model_name, run_type, run_timestamp)
+    #       VALUES ('{{ this.name }}', 'end', CURRENT_TIMESTAMP)

@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: landing
+    database: SLEEKMART_OMS
+    schema: L1_LANDING
+    config:
+      freshness:
+        warn_after: {count: 1, period: day}
+        error_after: {count: 3, period: day}
+      loaded_at_field: Updated_at
+
+    tables:
+      - name: customers
+        identifier: customers
+      - name: orders
+        identifier: orders
+      - name: orderitems
+        identifier: orderitems
+      - name: employees
+        identifier: employees
+        columns:
+          - name: address
+            tests:
+              - not_null
+              - not_blank_string
+      - name: stores
+        identifier: stores
+      - name: suppliers
+        identifier: suppliers
+      - name: products
+        identifier: products
+
+  - name: training
+    database: SLEEKMART_OMS
+    schema: TRAINING
+    tables:
+      # - name: city_temperature
+      - name: sales_us
+      - name: sales_uk
+      - name: sales_india

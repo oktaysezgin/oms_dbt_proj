@@ -1,0 +1,22 @@
+{{config(materialized='table')}}
+
+WITH customer_orders
+AS
+(
+    SELECT 
+        c.customerid AS CustomerId
+        , CONCAT(c.firstname, ' ', c.lastname) AS CustomerName
+        , COUNT(o.orderid) AS No_Of_Orders
+    FROM CUSTOMERS c
+    JOIN ORDERS o ON c.customerid = o.CUSTOMERID
+    GROUP BY
+        c.customerid
+        , CustomerName
+    ORDER BY
+        No_Of_Orders DESC
+)
+SELECT
+    CustomerId
+    , CustomerName
+    , No_Of_Orders
+FROM customer_orders
